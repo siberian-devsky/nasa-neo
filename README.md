@@ -1,4 +1,4 @@
-## NASA_NEO
+## NASA-NEO
 ### To Run:
 * pip install -r requirements.txt
 * streamlit run neo.py
