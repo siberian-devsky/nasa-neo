@@ -28,7 +28,7 @@ fig = px.scatter(df, x='dist_min', y='dist',
                      'des': False,
                      'cd': True,
                      'dist': ':.3f',
-                     'dist_min': ':.3',
+                     'dist_min': ':.3f',
                      'v_rel': ':.3f',
                      'v_inf': ':.3f',
                      'h': ':.3f'
