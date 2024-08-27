@@ -1,5 +1,5 @@
+#! .venv/bin/python3
 
-from webbrowser import get
 import streamlit as st
 import pandas as pd
 import requests
@@ -18,6 +18,8 @@ def get_neo_data():
 df, data_source = get_neo_data()
 
 st.header(":orange[:material/satellite_alt:] NASA NEO Data", divider="orange")
+st.sidebar.subheader(":orange[:material/satellite_alt:] Near Earth Objects")
+
 with st.expander(":blue[:material/newsmode:] About"):
     st.write(f"Data source: {data_source}")
     st.write("This plot shows the minimum and nominal (expected) distances for each " 
