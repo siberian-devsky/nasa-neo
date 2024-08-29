@@ -78,7 +78,7 @@ if moon_style == 'photo':
 
 st.sidebar.subheader(':orange[:material/bedtime:] Lunar Phase')
 with st.sidebar.expander(':green[:material/location_on:] Location Data'):
-    st.write(f'Time: :green[{spacetime['pretty_date']}]')
+    st.write(f'Date: :green[{spacetime['pretty_date']}]')
     st.write(f'Zone: :green[{spacetime['tz']}]')
     st.write(f'Lat: :green[{spacetime['lat']}]')
     st.write(f'Lon: :green[{spacetime['lon']}]')
