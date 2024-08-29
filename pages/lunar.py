@@ -1,18 +1,36 @@
 #1 .venv/bin/python
 
-import http.client
-from altair import Header
 import streamlit as st
+import http.client
 import base64
 import os
 import json
 import geocoder as gc
 
-from datetime import date
+import pytz
+from datetime import date, datetime as dt
+
 from dotenv import load_dotenv
 
 # fetch env vars from, you guessed it, .env
 load_dotenv()
+
+# localize TZ by IP
+def get_time_and_space():
+    # get location data (IP based)
+    coords = gc.ip('me')
+    lat, lon = coords.latlng
+    tz = pytz.timezone(coords.timezone)
+
+    return {
+        'pretty_date': dt.now().astimezone(tz).strftime("%a %b %d %Y"),  # display
+        'today': dt.now().astimezone(tz).strftime('%Y-%m-%d'), # api payload
+        'lat': lat,
+        'lon': lon,
+        'address': coords.address,
+        'tz': coords.timezone,
+    }
+
 
 # make columns
 def display_cols(dimensions: list | int = None, header=None,
@@ -24,7 +42,7 @@ def display_cols(dimensions: list | int = None, header=None,
     col1,col2,col3 = st.columns(dimensions)
     with col1:
         if header:
-            st.subheader(Header)
+            st.subheader(header)
             if img and col_for_image == 0:
                 st.image(image, use_column_width='always')
         if text:
@@ -32,7 +50,7 @@ def display_cols(dimensions: list | int = None, header=None,
 
     with col2:
         if header:
-            st.subheader(Header)
+            st.subheader(header)
         if img and col_for_image == 1:
             st.image(image, use_column_width='always')
         if text:
@@ -46,30 +64,24 @@ def display_cols(dimensions: list | int = None, header=None,
         if text:
             st.write(text[2])
 
-# get location data (IP based)
-coords = gc.ip('me')
-lat, lon = coords.latlng
-address = coords.address
-tz = coords.timezone
+spacetime = get_time_and_space()
 
-st.header(f':orange[:material/bedtime:] Lunar Phase: {address}', divider='orange')
-with st.expander(':green[:material/location_on:] Location Data'):
-    display_cols(3, text=[f'Lat: :green[{lat}]', f'Lon: :green[{lon}]', f'Timezone: :green[{tz}]'])
-    # st.write(f'Lat: :green[{lat}]')
-    # st.write(f'Lon: :green[{lon}]')
-    # st.write(f'Timezone: :green[{tz}]')
+st.header(f':orange[:material/bedtime:] Lunar Phase: {spacetime['address']}', divider='orange')
 
 moon_style = st.selectbox('Moon Style',
                           ['photo', 'sketch', 'shaded'],
-                          index=None,
-                          placeholder='Select a render option for the lunar image ...',
-                          label_visibility='collapsed')
+                          index=0)
 
 # override 'photo' to API expected value
 if moon_style == 'photo':
     moon_style = 'default'
 
 st.sidebar.subheader(':orange[:material/bedtime:] Lunar Phase')
+with st.sidebar.expander(':green[:material/location_on:] Location Data'):
+    st.write(f'Time: :green[{spacetime['pretty_date']}]')
+    st.write(f'Zone: :green[{spacetime['tz']}]')
+    st.write(f'Lat: :green[{spacetime['lat']}]')
+    st.write(f'Lon: :green[{spacetime['lon']}]')
 
 app_id = os.getenv('ApplicationId')
 app_secret = os.getenv('ApplicationSecret')
@@ -78,9 +90,6 @@ conn = http.client.HTTPSConnection('api.astronomyapi.com')
 
 userpass = f'{app_id}:{app_secret}'
 authString = base64.b64encode(userpass.encode()).decode()
-
-# set payload date to today
-today = date.today().isoformat()
 
 # payload as a Python dictionary
 payload_dict = {
@@ -92,9 +101,9 @@ payload_dict = {
         'textColor': '#45f792'
     },
     'observer': {
-        'latitude': lat,
-        'longitude': lon,
-        'date': today
+        'latitude': spacetime['lat'],
+        'longitude': spacetime['lon'],
+        'date': spacetime['today']
     },
     'view': {
         'type': 'landscape-simple',
