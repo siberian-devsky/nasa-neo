@@ -22,8 +22,8 @@ def get_time_and_space():
     lat, lon = coords.latlng
 
     return {
-        'pretty_date': dt.now().astimezone(tz).strftime("%a %b %d %Y"),  # display
-        'today': dt.now().astimezone(tz).strftime('%Y-%m-%d'), # api payload
+        'pretty_date': dt.now().strftime("%a %b %d %Y"),  # display
+        'today': dt.now().strftime('%Y-%m-%d'),  # api payload
         'lat': lat,
         'lon': lon,
         'address': coords.address,
