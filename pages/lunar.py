@@ -15,6 +15,8 @@ from dotenv import load_dotenv
 # Access the secrets
 app_id = st.secrets["ApplicationId"]
 app_secret = st.secrets["ApplicationSecret"]
+st.write(app_id)
+st.write(app_secret)
 
 # fetch env vars from, you guessed it, .env
 load_dotenv()
