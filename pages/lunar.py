@@ -12,6 +12,10 @@ from datetime import date, datetime as dt
 
 from dotenv import load_dotenv
 
+# Access the secrets
+app_id = st.secrets["ApplicationId"]
+app_secret = st.secrets["ApplicationSecret"]
+
 # fetch env vars from, you guessed it, .env
 load_dotenv()
 
