@@ -20,7 +20,6 @@ def get_time_and_space():
     # get location data (IP based)
     coords = gc.ip('me')
     lat, lon = coords.latlng
-    tz = pytz.timezone(coords.timezone)
 
     return {
         'pretty_date': dt.now().astimezone(tz).strftime("%a %b %d %Y"),  # display
@@ -28,7 +27,6 @@ def get_time_and_space():
         'lat': lat,
         'lon': lon,
         'address': coords.address,
-        'tz': tz,
     }
 
 
@@ -79,7 +77,7 @@ if moon_style == 'photo':
 st.sidebar.subheader(':orange[:material/bedtime:] Lunar Phase')
 with st.sidebar.expander(':green[:material/location_on:] Location Data'):
     st.write(f'Date: :green[{spacetime['pretty_date']}]')
-    st.write(f'Zone: :green[{spacetime['tz']}]')
+    # st.write(f'Zone: :green[{spacetime['tz']}]')
     st.write(f'Lat: :green[{spacetime['lat']}]')
     st.write(f'Lon: :green[{spacetime['lon']}]')
 
