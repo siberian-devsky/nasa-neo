@@ -12,12 +12,6 @@ from datetime import date, datetime as dt
 
 from dotenv import load_dotenv
 
-# Access the secrets
-app_id = st.secrets["ApplicationId"]
-app_secret = st.secrets["ApplicationSecret"]
-st.write(app_id)
-st.write(app_secret)
-
 # fetch env vars from, you guessed it, .env
 load_dotenv()
 
@@ -27,6 +21,8 @@ def get_time_and_space():
     coords = gc.ip('me')
     lat, lon = coords.latlng
     tz = pytz.timezone(coords.timezone)
+    st.write(f'{coords.timezone}')
+    st.write(f'{tz}')
 
     return {
         'pretty_date': dt.now().astimezone(tz).strftime("%a %b %d %Y"),  # display
