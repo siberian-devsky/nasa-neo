@@ -85,8 +85,8 @@ with st.sidebar.expander(':green[:material/location_on:] Location Data'):
     st.write(f'Lat: :green[{spacetime['lat']}]')
     st.write(f'Lon: :green[{spacetime['lon']}]')
 
-app_id = os.getenv('ApplicationId')
-app_secret = os.getenv('ApplicationSecret')
+app_id = st.secrets['ApplicationId']
+app_secret = st.secrets['ApplicationSecret']
 
 conn = http.client.HTTPSConnection('api.astronomyapi.com')
 
