@@ -28,7 +28,7 @@ def get_time_and_space():
         'lat': lat,
         'lon': lon,
         'address': coords.address,
-        'tz': coords.timezone,
+        'tz': tz,
     }
 
 
