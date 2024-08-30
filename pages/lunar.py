@@ -21,8 +21,6 @@ def get_time_and_space():
     coords = gc.ip('me')
     lat, lon = coords.latlng
     tz = pytz.timezone(coords.timezone)
-    st.write(f'{coords.timezone}')
-    st.write(f'{tz}')
 
     return {
         'pretty_date': dt.now().astimezone(tz).strftime("%a %b %d %Y"),  # display
