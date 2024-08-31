@@ -3,9 +3,7 @@
 import streamlit as st
 import http.client
 import base64
-import os
 import json
-
 import pytz
 from datetime import datetime as dt
 
@@ -27,7 +25,7 @@ lon = client_loc['longitude']
 # construct time data
 pretty_date = dt.now().astimezone(pytz.timezone(timezone)).strftime("%a %b %d %Y")  # display
 today = dt.now().astimezone(pytz.timezone(timezone)).strftime('%Y-%m-%d')  # api payload
-cur_time = dt.now().strftime('%H:%M:%S')
+cur_time = dt.now().astimezone(pytz.timezone(timezone)).strftime('%H:%M:%S')
 
 # make columns
 def display_cols(dimensions: list | int = None, header=None,
@@ -73,11 +71,10 @@ if moon_style == 'photo':
 
 st.sidebar.subheader(':orange[:material/bedtime:] Lunar Phase')
 with st.sidebar.expander(':green[:material/location_on:] Location Data'):
-    st.write(f'Date: :orange[{pretty_date}]')
-    st.write(f'Time: :orange[{cur_time}]')
-    st.write(f'Zone: :orange[{timezone}]')
-    st.write(f'Lat: :orange[{lat}]')
-    st.write(f'Lon: :orange[{lon}]')
+    st.markdown(f':orange[{pretty_date} - {cur_time}]')
+    st.write(f':orange[{timezone}]')
+    st.write(f':orange[{lat}]')
+    st.write(f':orange[{lon}]')
 
 app_id = st.secrets['ApplicationId']
 app_secret = st.secrets['ApplicationSecret']
