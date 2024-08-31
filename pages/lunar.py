@@ -71,10 +71,10 @@ if moon_style == 'photo':
 
 st.sidebar.subheader(':orange[:material/bedtime:] Lunar Phase')
 with st.sidebar.expander(':green[:material/location_on:] Location Data'):
-    st.markdown(f':orange[{pretty_date} - {cur_time}]')
-    st.write(f':orange[{timezone}]')
-    st.write(f':orange[{lat}]')
-    st.write(f':orange[{lon}]')
+    st.markdown(f':orange[{pretty_date} - {cur_time} {timezone}]')
+    # st.write(f':orange[{timezone}]')
+    st.write(f':orange[lat: {lat}] | :orange[lon:{lon}]')
+    # st.write(f':orange[{lon}]')
 
 app_id = st.secrets['ApplicationId']
 app_secret = st.secrets['ApplicationSecret']
