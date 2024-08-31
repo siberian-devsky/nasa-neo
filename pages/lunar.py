@@ -5,30 +5,29 @@ import http.client
 import base64
 import os
 import json
-import geocoder as gc
 
 import pytz
-from datetime import date, datetime as dt
+from datetime import datetime as dt
+
+from helpers.helpers import get_client_location
 
 from dotenv import load_dotenv
 
 # fetch env vars from, you guessed it, .env
 load_dotenv()
 
-# localize TZ by IP
-def get_time_and_space():
-    # get location data (IP based)
-    coords = gc.ip('me')
-    lat, lon = coords.latlng
+# found you!
+client_loc = get_client_location()
+city_state = f"{client_loc['city']}, {client_loc['region']}"
+city_state_country = f"{client_loc['city']}, {client_loc['region']}, {client_loc['country']}"
+timezone = client_loc['timezone']
+lat = client_loc['latitude']
+lon = client_loc['longitude']
 
-    return {
-        'pretty_date': dt.now().strftime("%a %b %d %Y"),  # display
-        'today': dt.now().strftime('%Y-%m-%d'),  # api payload
-        'lat': lat,
-        'lon': lon,
-        'address': coords.address,
-    }
-
+# construct time data
+pretty_date = dt.now().astimezone(pytz.timezone(timezone)).strftime("%a %b %d %Y")  # display
+today = dt.now().astimezone(pytz.timezone(timezone)).strftime('%Y-%m-%d')  # api payload
+cur_time = dt.now().strftime('%H:%M:%S')
 
 # make columns
 def display_cols(dimensions: list | int = None, header=None,
@@ -62,11 +61,9 @@ def display_cols(dimensions: list | int = None, header=None,
         if text:
             st.write(text[2])
 
-spacetime = get_time_and_space()
+st.header(f':orange[:material/bedtime:] Lunar Phase: {city_state_country}', divider='orange')
 
-st.header(f':orange[:material/bedtime:] Lunar Phase: {spacetime['address']}', divider='orange')
-
-moon_style = st.selectbox('Moon Style',
+moon_style = st.selectbox(':orange[Moon Style]',
                           ['photo', 'sketch', 'shaded'],
                           index=0)
 
@@ -76,10 +73,11 @@ if moon_style == 'photo':
 
 st.sidebar.subheader(':orange[:material/bedtime:] Lunar Phase')
 with st.sidebar.expander(':green[:material/location_on:] Location Data'):
-    st.write(f'Date: :green[{spacetime['pretty_date']}]')
-    # st.write(f'Zone: :green[{spacetime['tz']}]')
-    st.write(f'Lat: :green[{spacetime['lat']}]')
-    st.write(f'Lon: :green[{spacetime['lon']}]')
+    st.write(f'Date: :orange[{pretty_date}]')
+    st.write(f'Time: :orange[{cur_time}]')
+    st.write(f'Zone: :orange[{timezone}]')
+    st.write(f'Lat: :orange[{lat}]')
+    st.write(f'Lon: :orange[{lon}]')
 
 app_id = st.secrets['ApplicationId']
 app_secret = st.secrets['ApplicationSecret']
@@ -99,9 +97,9 @@ payload_dict = {
         'textColor': '#45f792'
     },
     'observer': {
-        'latitude': spacetime['lat'],
-        'longitude': spacetime['lon'],
-        'date': spacetime['today']
+        'latitude': lat,
+        'longitude': lon,
+        'date': today
     },
     'view': {
         'type': 'landscape-simple',
